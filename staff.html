@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>员工信息管理系统</title>
+</head>
+<style>
+div{
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid black;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    box-shadow: 2px 2px black;
+}
+label,input,select{
+    margin: 2px;
+}
+h2{
+      text-align: center;
+  }
+</style>
+<body>
+<div>
+<h2>员工查询</h2>
+
+<label for="keyword">请输入员工编号：</label>
+<input type="text" id="keyword" />
+<button id="search">查询</button>
+<p id="search-result"></p>
+
+<h2>员工新建</h2>
+<label for="staff-name">请输入员工姓名：</label>
+<input type="text" id="staff-name" /><br>
+<label for="staff-number">请输入员工编号：</label>
+<input type="text" id="staff-number" /><br>
+<label for="staff-sex">请选择员工性别：</label>
+<select id="staff-sex">
+    <option>女</option>
+    <option>男</option>
+</select><br>
+<label for="staff-job">请输入员工职位：</label>
+<input type="text" id="staff-job" /><br>
+<button id="save">保存</button>
+<p id="create-result"></p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+<script>
+    $(function(){
+        $('#search').click(function () {
+            $.ajax({
+                type:'GET',
+                url:'serverjson.php?number='+$('#keyword').val(),
+                dataType:'json',
+                success: function (data) {
+                    if (data.success) {
+                        $('#search-result').html(data.msg);
+                    } else {
+                        $('#search-result').html('出现错误：' + data.msg);
+                    }
+                },
+                error: function (jqXHR) {
+                    $('#search-result').html('发生错误:' + jqXHR.status);
+                }
+            });
+        });
+        $('#save').click(function () {
+            $.ajax({
+                type:'POST',
+                url:'serverjson.php',
+                dataType:'json',
+                data:{
+                    name: $('#staff-name').val(),
+                    number: $('#staff-number').val(),
+                    sex: $('#staff-sex').val(),
+                    job: $('#staff-job').val()
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $('#create-result').html(data.msg);
+                    } else {
+                        $('#create-result').html('出现错误：' + data.msg);
+                    }
+                },
+                error: function (jqXHR) {
+                    $('#create-result').html('发生错误:' + jqXHR.status);
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>
